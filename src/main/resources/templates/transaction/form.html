@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <th:block th:replace="~{fragments/head :: head('Cadastrar Transação - Finance App')}"></th:block>
+    <body>
+        <th:block th:replace="~{fragments/head :: header}"></th:block>
+        <div class="container mt-4">
+            <!-- Fragment de mensagens -->
+            <th:block th:replace="~{fragments/messages :: messages}"></th:block>
+
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastrar Transação
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form action="#" th:action="@{/transaction/save}" th:object="${transaction}" method="POST" novalidate>
+
+                        <!-- Descrição -->
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-2 col-form-label">Descrição *</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{description}" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
+                                       id="description" 
+                                       placeholder="Ex: Salário, Aluguel, Supermercado..." />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Valor -->
+                        <div class="form-group row">
+                            <label for="amount" class="col-sm-2 col-form-label">Valor (R$) *</label>
+                            <div class="col-sm-10">
+                                <input type="number" th:field="*{amount}" 
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''"
+                                       id="amount" step="0.01" min="0.01"
+                                       placeholder="Ex: 1500.00" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Tipo -->
+                        <div class="form-group row">
+                            <label for="type" class="col-sm-2 col-form-label">Tipo *</label>
+                            <div class="col-sm-10">
+                                <select th:field="*{type}" 
+                                        class="form-control"
+                                        th:classappend="${#fields.hasErrors('type')} ? 'is-invalid' : ''"
+                                        id="type">
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="RECEITA">Receita</option>
+                                    <option value="DESPESA">Despesa</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="form-group row">
+                            <label for="category" class="col-sm-2 col-form-label">Categoria *</label>
+                            <div class="col-sm-10">
+                                <select th:field="*{category}" 
+                                        class="form-control"
+                                        th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''"
+                                        id="category">
+                                    <option value="">Selecione a categoria</option>
+                                    <option value="Alimentação">Alimentação</option>
+                                    <option value="Moradia">Moradia</option>
+                                    <option value="Transporte">Transporte</option>
+                                    <option value="Saúde">Saúde</option>
+                                    <option value="Educação">Educação</option>
+                                    <option value="Lazer">Lazer</option>
+                                    <option value="Salário">Salário</option>
+                                    <option value="Investimento">Investimento</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Data -->
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-2 col-form-label">Data *</label>
+                            <div class="col-sm-10">
+                                <input type="date" th:field="*{date}" 
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('date')} ? 'is-invalid' : ''"
+                                       id="date" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="form-group row">
+                            <div class="col-sm-10 offset-sm-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Cadastrar
+                                </button>
+                                <a th:href="@{/transaction}" class="btn btn-secondary ml-2">
+                                    <i class="fas fa-arrow-left"></i> Voltar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+    </body>
+</html>

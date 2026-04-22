@@ -10,12 +10,14 @@
             <div class="card">
                 <div class="card-header bg-dark text-white">
                     <h4 class="mb-0">
-                        <i class="fas fa-plus-circle"></i>
-                        Cadastrar Transação
+                        <i class="fas" th:classappend="${transaction.id == null} ? 'fa-plus-circle' : 'fa-edit'"></i>
+                        <span th:text="${transaction.id == null} ? 'Cadastrar Transação' : 'Editar Transação'"></span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <form action="#" th:action="@{/transaction/save}" th:object="${transaction}" method="POST" novalidate>
+                        <!-- Campo hidden para edição -->
+                        <input type="hidden" th:field="*{id}" />
 
                         <!-- Descrição -->
                         <div class="form-group row">
@@ -98,8 +100,8 @@
                         <div class="form-group row">
                             <div class="col-sm-10 offset-sm-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i>
-                                    Cadastrar
+                                    <i class="fas" th:classappend="${transaction.id == null} ? 'fa-save' : 'fa-sync'"></i>
+                                    <span th:text="${transaction.id == null} ? 'Cadastrar' : 'Atualizar'"></span>
                                 </button>
                                 <a th:href="@{/transaction}" class="btn btn-secondary ml-2">
                                     <i class="fas fa-arrow-left"></i> Voltar

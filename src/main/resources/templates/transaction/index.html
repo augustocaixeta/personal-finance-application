@@ -31,6 +31,7 @@
                         <th scope="col">Tipo</th>
                         <th scope="col">Categoria</th>
                         <th scope="col">Data</th>
+                        <th scope="col" class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +51,12 @@
                         </td>
                         <td th:text="${transaction.category}"></td>
                         <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy')}"></td>
+                        <td class="text-center">
+                            <a th:href="@{/transaction/edit/{id}(id=${transaction.id})}" class="btn btn-sm btn-warning"
+                                title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

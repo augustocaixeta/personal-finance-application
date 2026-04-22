@@ -12,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/transaction")
 public class TransactionController {
@@ -40,6 +42,17 @@ public class TransactionController {
         }
         transactionService.save(transaction);
         redirectAttributes.addFlashAttribute("successMessage", "Transação salva com sucesso!");
+        return "redirect:/transaction";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Transaction> transaction = transactionService.findById(id);
+        if (transaction.isPresent()) {
+            model.addAttribute("transaction", transaction.get());
+            return "transaction/form";
+        }
+        redirectAttributes.addFlashAttribute("errorMessage", "Transação não encontrada!");
         return "redirect:/transaction";
     }
 }

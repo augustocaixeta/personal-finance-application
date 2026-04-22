@@ -55,4 +55,11 @@ public class TransactionController {
         redirectAttributes.addFlashAttribute("errorMessage", "Transação não encontrada!");
         return "redirect:/transaction";
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        transactionService.deleteById(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Transação excluída com sucesso!");
+        return "redirect:/transaction";
+    }
 }

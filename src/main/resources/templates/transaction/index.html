@@ -56,6 +56,11 @@
                                 title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            <a th:href="@{/transaction/delete/{id}(id=${transaction.id})}" class="btn btn-sm btn-danger"
+                                title="Excluir"
+                                onclick="return confirm('Tem certeza que deseja excluir esta transação?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>

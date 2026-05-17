@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/head :: head('Cadastrar Usuario - Finance App')}"></th:block>
+
+<body>
+    <th:block th:replace="~{fragments/head :: header}"></th:block>
+    <div class="container mt-4">
+        <th:block th:replace="~{fragments/messages :: messages}"></th:block>
+
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-plus"></i>
+                    Cadastrar Usuario
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="#" th:action="@{/saveUser}" th:object="${user}" method="POST">
+                    <div class="form-group row">
+                        <label for="name" class="col-sm-2 col-form-label">Nome *</label>
+                        <div class="col-sm-10">
+                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nome completo" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-2 col-form-label">E-mail *</label>
+                        <div class="col-sm-10">
+                            <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="email@exemplo.com" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-2 col-form-label">Senha *</label>
+                        <div class="col-sm-10">
+                            <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Digite uma senha" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Cadastrar
+                            </button>
+                            <a th:href="@{/}" class="btn btn-secondary ml-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+
+</html>

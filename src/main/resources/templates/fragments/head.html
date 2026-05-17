@@ -62,6 +62,11 @@
                         <i class="fas fa-plus-circle"></i> Nova Transação
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a sec:authorize="hasAuthority('Admin')" class="nav-link" th:href="@{/register}">
+                        <i class="fas fa-user-plus"></i> Usuarios
+                    </a>
+                </li>
             </ul>
             <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

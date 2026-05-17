@@ -1,4 +1,4 @@
-package com.aacs.financeapplication.service;
+package com.aacs.financeapplication.impl;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.aacs.financeapplication.model.User;
 import com.aacs.financeapplication.repository.UserRepository;
+import com.aacs.financeapplication.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService, UserDetailsService {
@@ -37,11 +38,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findByEmailOrName(username, username);
 
         if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("Usuario com email " + email + " nao encontrado");
+            throw new UsernameNotFoundException("Usuario " + username + " nao encontrado");
         }
 
         User user = optionalUser.get();
@@ -51,7 +52,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                email,
+                username,
                 user.getPassword(),
                 authorities);
     }

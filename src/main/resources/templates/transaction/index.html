@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:replace="~{fragments/head :: head('Transações - Finance App')}"></th:block>
 
 <body>
@@ -10,7 +10,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-exchange-alt"></i> Transações</h1>
-            <a th:href="@{/transaction/create}" class="btn btn-success">
+            <a sec:authorize="hasAuthority('Admin')" th:href="@{/transaction/create}" class="btn btn-success">
                 <i class="fas fa-plus"></i> Nova Transação
             </a>
         </div>
@@ -18,7 +18,7 @@
         <!-- Tabela de transações -->
         <div th:if="${#lists.isEmpty(transactionsList)}" class="alert alert-info text-center">
             <i class="fas fa-info-circle"></i> Nenhuma transação cadastrada.
-            <a th:href="@{/transaction/create}">Cadastre a primeira!</a>
+            <a sec:authorize="hasAuthority('Admin')" th:href="@{/transaction/create}">Cadastre a primeira!</a>
         </div>
 
         <div th:unless="${#lists.isEmpty(transactionsList)}" class="table-responsive">
@@ -31,7 +31,7 @@
                         <th scope="col">Tipo</th>
                         <th scope="col">Categoria</th>
                         <th scope="col">Data</th>
-                        <th scope="col" class="text-center">Ações</th>
+                        <th sec:authorize="hasAuthority('Admin')" scope="col" class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,7 +51,7 @@
                         </td>
                         <td th:text="${transaction.category}"></td>
                         <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy')}"></td>
-                        <td class="text-center">
+                        <td sec:authorize="hasAuthority('Admin')" class="text-center">
                             <a th:href="@{/transaction/edit/{id}(id=${transaction.id})}" class="btn btn-sm btn-warning"
                                 title="Editar">
                                 <i class="fas fa-edit"></i>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -58,11 +58,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/transaction/create}">
+                    <a sec:authorize="hasAuthority('Admin')" class="nav-link" th:href="@{/transaction/create}">
                         <i class="fas fa-plus-circle"></i> Nova Transação
                     </a>
                 </li>
             </ul>
+            <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-outline-light my-2 my-sm-0">Sair</button>
+            </form>
         </div>
     </div>
 </nav>

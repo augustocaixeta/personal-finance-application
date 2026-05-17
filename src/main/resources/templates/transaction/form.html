@@ -16,6 +16,7 @@
                 </div>
                 <div class="card-body">
                     <form action="#" th:action="@{/transaction/save}" th:object="${transaction}" method="POST" novalidate>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <!-- Campo hidden para edição -->
                         <input type="hidden" th:field="*{id}" />
 

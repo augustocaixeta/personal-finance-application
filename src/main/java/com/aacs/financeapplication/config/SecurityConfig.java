@@ -27,12 +27,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/css/**", "/api/**").permitAll()
                 .requestMatchers("/register", "/saveUser")
                 .hasAuthority("Admin")
                 .requestMatchers("/transaction/*", "/transaction/edit/**", "/transaction/delete/**")
                 .hasAuthority("Admin")
                 .anyRequest().authenticated())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**"))
                 .formLogin(login -> login
                         .defaultSuccessUrl("/", true))
                 .logout(logout -> logout

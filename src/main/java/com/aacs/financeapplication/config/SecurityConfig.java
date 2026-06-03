@@ -45,6 +45,7 @@ public class SecurityConfig {
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/register", "/saveUser")
                 .hasAuthority("Admin")
                 .requestMatchers("/transaction/*", "/transaction/edit/**", "/transaction/delete/**")

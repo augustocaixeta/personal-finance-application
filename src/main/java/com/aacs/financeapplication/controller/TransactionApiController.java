@@ -1,11 +1,11 @@
 package com.aacs.financeapplication.controller;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.aacs.financeapplication.model.Transaction;
 import com.aacs.financeapplication.service.TransactionService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -26,49 +29,61 @@ public class TransactionApiController {
     private TransactionService transactionService;
 
     @GetMapping
-    public List<Transaction> listar() {
-        return transactionService.findAll();
+    public ResponseEntity<List<Transaction>> listar() {
+        List<Transaction> transactions = transactionService.findAll();
+        return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> buscarPorId(@PathVariable Long id) {
-        Optional<Transaction> transaction = transactionService.findById(id);
-
-        if (transaction.isPresent()) {
-            return ResponseEntity.ok(transaction.get());
+        try {
+            Transaction transaction = transactionService.findById(id).orElseThrow();
+            return ResponseEntity.ok(transaction);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> criar(@RequestBody Transaction transaction) {
+    public ResponseEntity<?> criar(@Valid @RequestBody Transaction transaction, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+
         Transaction savedTransaction = transactionService.save(transaction);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTransaction);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedTransaction.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(savedTransaction);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> atualizar(@PathVariable Long id, @RequestBody Transaction transaction) {
-        Optional<Transaction> existingTransaction = transactionService.findById(id);
-
-        if (existingTransaction.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody Transaction transaction,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
-        transaction.setId(id);
-        Transaction savedTransaction = transactionService.save(transaction);
-        return ResponseEntity.ok(savedTransaction);
+        try {
+            transactionService.findById(id).orElseThrow();
+            transaction.setId(id);
+            Transaction savedTransaction = transactionService.save(transaction);
+            return ResponseEntity.ok(savedTransaction);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        Optional<Transaction> transaction = transactionService.findById(id);
-
-        if (transaction.isEmpty()) {
+        try {
+            transactionService.findById(id).orElseThrow();
+            transactionService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-
-        transactionService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

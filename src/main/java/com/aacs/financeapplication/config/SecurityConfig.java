@@ -2,6 +2,7 @@ package com.aacs.financeapplication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -25,16 +26,30 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/**")
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/api/public/**").permitAll()
+                        .anyRequest().authenticated())
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(basic -> {
+                })
+                .authenticationProvider(authenticationProvider());
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/css/**", "/api/**").permitAll()
+                .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/register", "/saveUser")
                 .hasAuthority("Admin")
                 .requestMatchers("/transaction/*", "/transaction/edit/**", "/transaction/delete/**")
                 .hasAuthority("Admin")
                 .anyRequest().authenticated())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**"))
                 .formLogin(login -> login
                         .defaultSuccessUrl("/", true))
                 .logout(logout -> logout
